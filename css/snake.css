@@ -1,0 +1,75 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#map{
+    position: relative;
+    margin: 20px auto 0;
+}
+#food{
+    position: absolute;
+    background: url('images/food.png') no-repeat;
+}
+.control{
+    text-align: center;
+    padding-top: 20px;
+    box-sizing: border-box;
+}
+.control input{
+    padding: 5px;
+}
+#mask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+.info{
+    width: 600px;
+    height: 400px;
+    background-color: #fff;
+    margin: 150px auto 0;
+    position: relative;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+#cancle{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    position: absolute;
+    top: -25px;
+    right: -25px;
+}
+table{
+    margin: 50px 0 0 50px;
+}
+input{
+    vertical-align: middle;
+}
+#sure{
+    padding: 5px;
+    margin-top: 50px;
+}
+#showColor{
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    display: inline-block;
+    vertical-align: middle;
+}
+#showColor1{
+    width: 50px;
+    height: 50px;
+    background-color: #ccc;
+    display: inline-block;
+    vertical-align: middle;
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #map{
+            position: relative;
+            margin: 20px auto 0;
+        }
+        #food{
+            position: absolute;
+            background: url('images/food.png') no-repeat;
+        }
+        .control{
+            text-align: center;
+            padding-top: 20px;
+            box-sizing: border-box;
+        }
+        .control input{
+            padding: 5px;
+        }
+        #mask{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+        }
+        .info{
+            width: 600px;
+            height: 400px;
+            background-color: #fff;
+            margin: 150px auto 0;
+            position: relative;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+        #cancle{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            text-align: center;
+            line-height: 50px;
+            cursor: pointer;
+            position: absolute;
+            top: -25px;
+            right: -25px;
+        }
+        table{
+            margin: 50px 0 0 50px;
+        }
+        input{
+            vertical-align: middle;
+        }
+        #sure{
+            padding: 5px;
+            margin-top: 50px;
+        }
+        #showColor{
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        #showColor1{
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <!-- 
+        1.案例中蛇，食物，地图是对象
+        2.要随机产生俩个数字
+        3.蛇的身体构造
+        4.吃食物加长，且食物刷新
+        5.改变方向
+        6.难点，重点都在蛇的那块
+        7.在设置中点击确定时，不能再创建新的对象，应该继续使用页面刚开始渲染时的对象
+     -->
+     <div class="game">
+         <div class="control">
+             <input type="button" value="开始游戏" id="gameStart">
+             <input type="button" value="暂停游戏" id="stop">
+             <input type="button" value="设置" id="set">
+             <p>温馨提示：←键---向左，↑键--向上，→键---向右，↓键---向下</p>
+         </div>
+         <div id="map">
+            <div id="food"></div>
+            <div></div>
+         </div>
+         <div id="mask">
+             <div class="info">
+                 <div id="cancle">关闭</div>
+                 <table border="1" cellspacing='0' cellpadding='0' width='500px' height='200px'>
+                    <tr>
+                        <td>地图大小</td>
+                        <td>
+                            400×400: <input type="radio" name="mapSize" value="400×400" class="rad1">
+                            800×600: <input type="radio" name="mapSize" value="800×600" class="rad1" checked>
+                            1000×600: <input type="radio" name="mapSize" value="1000×600" class="rad1">
+                            1200×600: <input type="radio" name="mapSize" value="1200×600" class="rad1">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>地图颜色</td>
+                        <td>
+                            <input type="button" value="点击随机生成颜色" id="changeColor">
+                            <div id="showColor"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>食物的颜色</td>
+                        <td>
+                            <input type="button" value="点击随机生成颜色" id="changeColor1">
+                            <div id="showColor1"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>贪吃蛇速度</td>
+                        <td>
+                            慢: <input type="radio" name="sudu" value="800" class="su1">
+                            较快: <input type="radio" name="sudu" value="400" class="su1">
+                            正常: <input type="radio" name="sudu" value="200" class="su1" checked>
+                            特快: <input type="radio" name="sudu" value="50" class="su1">
+                        </td>
+                    </tr>
+                 </table>
+                 <button id="sure">确定</button>  
+             </div>
+         </div>
+     </div>
+     <script src="map.js"></script>
+     <script src="food.js"></script>
+     <script src='random.js'></script>
+     <script src='snake.js'></script>
+     <script>
+         var gameStart=document.getElementById('gameStart')
+         var stop=document.getElementById('stop')
+         var set=document.getElementById('set')
+        var mask=document.getElementById('mask')
+        var radArr=mask.getElementsByClassName('rad1')
+        var sure=document.getElementById('sure')
+        var changeColor=document.getElementById('changeColor')
+        var showColor=document.getElementById('showColor')
+        var changeColor1=document.getElementById('changeColor1')
+        var showColor1=document.getElementById('showColor1')
+        var su1=document.getElementsByClassName('su1')
+        var cancle=document.getElementById('cancle')
+
+        var mapW=800
+        var mapH=600
+        var snakeS=200
+        var str='#ccc'
+        var str1='green'
+        cancle.onclick=function(){
+            mask.style.display='none'
+        }
+        for(var i=0;i<radArr.length;i++){
+            radArr[i].onclick=function(){
+               var size=this.value
+               size=size.split('×')
+               mapW=parseInt(size[0])
+               mapH=parseInt(size[1])
+            }
+        }
+        for(var j=0;j<su1.length;j++){
+            su1[j].onclick=function(){
+                var sudu=this.value
+                snakeS=parseInt(sudu)
+                console.log(snakeS);
+            }
+        }
+        changeColor.onclick=function(){
+            str='#'
+            var arr=[0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F']
+            for(var i=0;i<6;i++){
+                var num=parseInt(Math.random()*16)
+                str=str+arr[num]
+            }
+            showColor.style.backgroundColor=str
+        }
+        changeColor1.onclick=function(){
+            str1='#'
+            var arr=[0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F']
+            for(var i=0;i<6;i++){
+                var num=parseInt(Math.random()*16)
+                str1=str1+arr[num]
+            }
+            showColor1.style.backgroundColor=str1
+        }
+        sure.onclick=function(){
+            map=new Map(mapW,mapH,str)
+            map.init()
+            food=new Food(20,20,str1)
+            food.init(rd,map)
+            snake=new Snake(20,20,'right',snakeS)
+            snake.init(map)
+            mask.style.display='none'
+         }
+         gameStart.onclick=function(){
+            snake.move(map,food,rd)
+         }
+         stop.onclick=function(){
+             snake.stop()
+         }
+         set.onclick=function(){
+            mask.style.display='block'
+         }
+         var map=new Map(800,600,str)
+         map.init()
+         var rd=new Random()
+         var food=new Food(20,20,str1)
+         food.init(rd,map)
+         var snake=new Snake(20,20,'right',snakeS)
+         snake.init(map)
+     </script>
+</body>
+</html>
